@@ -12,6 +12,7 @@ import { weatherAgent } from "./agents";
 const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 const apiEmail = process.env.CLOUDFLARE_EMAIL;
 const scope = process.env.CLOUDFLARE_SCOPE;
+const authToken = process.env.LIBSQL_AUTH_TOKEN;
 
 if (!apiToken || !apiEmail || !scope) {
   throw new Error("Missing Cloudflare API token or email");
@@ -22,7 +23,8 @@ export const mastra = new Mastra({
   agents: { weatherAgent },
   storage: new LibSQLStore({
     // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
-    url: ":memory:",
+    url: "libsql://my-mastra-app-jason-l.aws-us-east-1.turso.io", // path is relative to the .mastra/output directory
+    authToken: authToken,
   }),
   logger: createLogger({
     name: "Mastra",
